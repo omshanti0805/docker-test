@@ -1,0 +1,36 @@
+version: "3.2"
+services:
+
+  apache1:
+    
+    build: ./proxy
+    volumes:
+      - ./proxy/dummy.tkinteractive.com/public_html/:/var/www/dummy.tkinteractive.com/public_html/
+      - ./proxy/sample.tki.com/public_html/:/var/www/sample.tki.com/public_html/
+
+    container_name: apache-php1
+    
+    restart: always
+
+  apache2:
+    
+    build: ./proxy2
+    volumes:
+      - ./proxy2/dummy.tkinteractive.com/public_html/:/var/www/dummy.tkinteractive.com/public_html/
+      - ./proxy2/sample.tki.com/public_html/:/var/www/sample.tki.com/public_html/
+
+    container_name: apache-php2
+    
+    restart: always
+
+  reverseproxy:
+    depends_on:
+      - apache1
+      - apache2
+    build: .
+    ports: 
+      - 80:80
+    container_name:  reverseproxy_container
+    restart: always
+
+
